@@ -2,12 +2,12 @@
   <q-page class="q-pa-sm" id="page">
     <div class="container">
       <div >
-        <div class="title-page">Programa</div>
+        <div class="title-page">Docente: {{docente}}</div>
         <div class="title-page">Filtros</div>
         <div>
           <div class="filtros">
             <div class="filtro-conteudo">
-              <div>Programa:</div>
+              <div>Programa</div>
                 <q-select
                   dense
                   outlined
@@ -59,155 +59,45 @@ import TableComponent from '../components/TableComponent.vue'
 import StackChart from '../components/StackChart.vue'
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'DocentePage',
   components: {
     TableComponent,
     StackChart
   },
   setup(){
-    const rows = [
-      {
-        docente: "Docente 1",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 2",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 3",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 4",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 5",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 6",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 7",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-    ]
+    const docente = ref("Geraldo Braz Júnior")
+    const rows = [{discente: "João", titulo: "TCC", tipo: "TCC", ano: "2021"}, 
+                  {discente: "Maria", titulo: "Dissertação", tipo: "Dissertação", ano: "2021"},
+                  {discente: "José", titulo: "Tese", tipo: "Tese", ano: "2021"}]
     const columns = [
           {
-            name: "docente",
-            label: "Docente",
-            field: "docente",
+            name: "discente",
+            label: "Discente",
+            field: "discente",
             sortable: true,
             align: "left",
           },
           {
-            name: "A1",
-            label: "A1",
-            field: "A1",
+            name: "titulo",
+            label: "Título",
+            field: "titulo",
             sortable: true,
             align: "left",
           },
           {
-            name: "A2",
-            label: "A2",
-            field: "A2",
+            name: "tipo",
+            label: "Tipo",
+            field: "tipo",
             sortable: true,
             align: "left",
           },
           {
-            name: "A3",
-            label: "A3",
-            field: "A3",
+            name: "ano",
+            label: "Ano",
+            field: "ano",
             sortable: true,
             align: "left",
-          },
-          {
-            name: "A4",
-            label: "A4",
-            field: "A4",
-            sortable: true,
-            align: "left",
-          },
-          {
-            name: "B1",
-            label: "B1",
-            field: "B1",
-            sortable: true,
-            align: "left",
-          },
-          {
-            name: "B2",
-            label: "B2",
-            field: "B2",
-            sortable: true,
-            align: "left",
-          },
-          {
-            name: "B3",
-            label: "B3",
-            field: "B3",
-            sortable: true,
-            align: "left",
-          },
-          {
-            name: "B4",
-            label: "B4",
-            field: "B4",
-            sortable: true,
-            align: "left",
-          },
+          }
     ]
     const filter_columns = [1,2,3]
 
@@ -226,7 +116,8 @@ export default defineComponent({
       ano_final,
       programa,
       programa_select,
-      data
+      data,
+      docente
     }
 
   },
@@ -261,3 +152,4 @@ export default defineComponent({
   align-items: center;
 }
 </style>
+

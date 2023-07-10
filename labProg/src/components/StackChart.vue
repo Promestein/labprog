@@ -4,14 +4,13 @@
     </div>
     <div class="chart" v-else>
       <div class="text-chart">
-        Credores que Acumulam a Mesma Quantidade de Cargos
+        Producao vs Qualis
       </div>
       <br />
       <div class="chart-container">
-        <div class="yaxis-chart">Cargos Acumulados</div>
         <apexcharts
-          width="800"
-          :height="'100%'"
+          width="1000"
+          height="300"
           type="bar"
           :options="chartOptions"
           :series="series"
@@ -23,51 +22,53 @@
   
   <script>
   import VueApexCharts from "vue3-apexcharts";
+  import { defineComponent, ref } from 'vue'
   
   export default {
-    name: "STColumnChart",
+    name: "StackChart",
     components: {
       apexcharts: VueApexCharts,
     },
     props: {
-      ano: {
+      anoInicial: {
         type: String,
+        required: true,
+      },
+      anoFinal: {
+        type: String,
+        required: true,
+      },
+      data: {
+        type: Array,
         required: true,
       },
     },
     methods: {
-      loadData(ano) {
-        let api_url =
-          process.env.API_URL + "acumuloCargos/acumulo_por_credor/" + `${ano}`;
-        this.$axios
-          .get(api_url)
-          .then((response) => {
-            const rawData = response.data;
-            this.transformData(rawData);
-            this.Carregar = false;
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      },
       transformData(rawData) {
+        console.log("raw",rawData)
         let series = [];
+        const qualis = ref(["A1", "A2", "A3", "A4"])
+        const anos = ref([2019, 2020, 2021, 2022, 2023])
   
         let hashObj = new Map();
-        for (let i = 0; i < rawData.length; i++) {
-          hashObj.set(rawData[i].qtdAcumulosMes, Array(12).fill(0));
+        for (let i = 0; i < qualis.value.length; i++) {
+          hashObj.set(qualis.value[i], Array(this.anoFinal-this.anoInicial).fill(0));
         }
+        console.log("hash",hashObj)
         for (let i = 0; i < rawData.length; i++) {
-          let arr = hashObj.get(rawData[i].qtdAcumulosMes);
-          arr[rawData[i].mes - 1] = rawData[i].qtdCredoresAcumulo;
-          hashObj.set(rawData[i].qtdAcumulosMes, arr);
+          let arr = hashObj.get(qualis.value[i]);
+          for (let j = 0; j < anos.value.length; j++) {
+            arr[j] = rawData[i][j];
+          }
         }
+        console.log("hash",hashObj)
         for (let [key, value] of hashObj) {
           series.push({
             name: key,
             data: value,
           });
         }
+        console.log("series",series)
   
         this.series = series;
       },
@@ -83,10 +84,10 @@
       },
     },
     watch: {
-      ano: {
+      data: {
         handler(newVal, oldVal) {
-          this.Carregar = true;
-          this.loadData(newVal);
+          this.transformData(newVal);
+          // this.Carregar = true;
         },
         immediate: true,
       },
@@ -111,32 +112,28 @@
             textAnchor: "start",
           },
           xaxis: {
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            title: {
-              text: "Meses",
-              style: {
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "#333",
-              },
-            },
+            categories: [2019, 2020, 2021, 2022, 2023],
           },
           tooltip: {
             custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-              const mesReferencia = dataPointIndex + 1;
-              const qtdCargo = w.config.series[seriesIndex].name;
-              const valor = w.config.series[seriesIndex].data[dataPointIndex];
+              // console.log("series", series);
+              // console.log("seriesIndex", seriesIndex);
+              // console.log("dataPointIndex", dataPointIndex);
+              // console.log("w", w);
+              const ano = w.config.xaxis.categories[dataPointIndex];
+              const qualis = w.config.series[seriesIndex].name;
+              const quantidade = w.config.series[seriesIndex].data[dataPointIndex];
+              const color = w.globals.colors[seriesIndex];
               return `
                               <div class="custom-tooltip">
-                                  <span>Mês: ${mesReferencia} </span><br/>
-                                  <span>Quantidade de cargos acumulados: ${qtdCargo}</span><br/>
-                                  <span>Credores em Situação de Acúmulo: ${valor} </span>
+                                  <span>Ano: ${ano} </span><br/>
+                                  <span>${qualis}: ${quantidade}</span><br/>
                               </div>
                               `;
             },
           },
         },
-        Carregar: true,
+        Carregar: false,
       };
     },
   };
@@ -149,6 +146,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .yaxis-chart {
+  width: 15%;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
   }
   
   .loading {
