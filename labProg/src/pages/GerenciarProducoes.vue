@@ -69,15 +69,21 @@
   </template>
   
   <script>
-  import { defineComponent, ref } from 'vue'
+  import { defineComponent, ref, onMounted } from 'vue'
+  import axios from "axios";
   import TableEditarComponent from '../components/TableEditarComponent.vue'
   import ModalProducoes from 'src/components/ModalProducoes.vue'
+  import {
+    loadData,
+    transformData,
+  } from "src/utils/dados.js";
   
   export default defineComponent({
     name: 'GerenciarProducoes',
     components: {
       TableEditarComponent, ModalProducoes,
     },
+
     setup(){
         const docente = ref("Geraldo Braz Júnior")
         const rows = [
@@ -121,6 +127,25 @@
         qtd_mestrado.value = 0
         qtd_doutorado.value = 0
       }
+
+      const get_data = async () => {
+        let filtered_url = "http://localhost:8083/api/producao/obterProducao";
+        axios
+          .get(filtered_url)
+          .then((response) => {
+            const rawData = response.data;
+            console.log("a",rawData)
+            rows.value = transformData(rawData, columns.value);
+            carregar.value = false;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+
+      onMounted(() => {
+        get_data()
+      })
   
       return {
         rows,
