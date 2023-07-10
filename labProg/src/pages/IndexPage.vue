@@ -55,6 +55,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import axios from "axios";
 import TableComponent from '../components/TableComponent.vue'
 import StackChart from '../components/StackChart.vue'
 
@@ -217,6 +218,20 @@ export default defineComponent({
     const programa_select = ref(["PPGCC", "DCCMAPI"])
 
     const data = ref([[1,2,3,4,4], [3,3,2,3,4], [1,4,2,5,5], [2,2,2,2,2,]])
+
+    const get_data = async () => {
+      let filtered_url = "http://localhost:8000/api/producao/?";
+      axios
+            .get(filtered_url)
+            .then((response) => {
+              const rawData = response.data;
+              // rows.value = transformData(rawData, columns.value);
+              carregar.value = false;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+    }
 
     return {
       rows,

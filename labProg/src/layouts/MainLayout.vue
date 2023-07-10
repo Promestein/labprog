@@ -11,6 +11,9 @@
               <a href="/#/docente" class="tab">
               <q-tab class="tab" name="docente" Label="Docente">Docentes</q-tab>
               </a>
+              <a href="/#/gerenciar_producoes" class="tab">
+              <q-tab class="tab" name="producoes" Label="Producoes">Produções</q-tab>
+              </a>
             </q-tabs>
         </q-toolbar>
     <q-page-container>
