@@ -5,8 +5,12 @@
               SPPG
             </q-toolbar-title>
             <q-tabs v-model="tab">
-              <q-tab class="tab" name="programa" Label="Programa" to="/">Programas</q-tab>
-              <q-tab class="tab" name="docente" Label="Docente" to="/docente">Docentes</q-tab>
+              <a href="/" class="tab">
+                <q-tab class="tab" name="programa" Label="Programa">Programas</q-tab>
+              </a>
+              <a href="/#/docente" class="tab">
+              <q-tab class="tab" name="docente" Label="Docente">Docentes</q-tab>
+              </a>
             </q-tabs>
         </q-toolbar>
     <q-page-container>
@@ -18,6 +22,7 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { QTabs, QTab } from 'quasar'
 
 const linksList = [
   {
@@ -63,6 +68,28 @@ const linksList = [
     link: 'https://awesome.quasar.dev'
   }
 ]
+
+export default {
+  components: {
+    QTabs,
+    QTab
+  },
+  data() {
+    return {
+      tabs: [
+        {
+          to: '/',
+          label: 'Programa'
+        },
+        {
+          to: '/docente',
+          label: 'Docente'
+        },
+        // Add more tabs as needed
+      ]
+    }
+  }
+}
 </script>
 
 <style>
@@ -93,6 +120,7 @@ const linksList = [
   }
 
   .tab {
-
+    text-decoration: none;
+    color: #000;
   }
 </style>
