@@ -217,15 +217,17 @@ export default defineComponent({
     const programa = ref("PPGCC")
     const programa_select = ref(["PPGCC", "DCCMAPI"])
 
-    const data = ref([[1,2,3,4,4], [3,3,2,3,4], [1,4,2,5,5], [2,2,2,2,2,]])
+    const data = ref([])
 
     const get_data = async () => {
-      let filtered_url = "http://localhost:8081/api/v1/qualis/"+15+"/evento/"+ano_inicial.value+"/"+ano_final.value;
+      let filtered_url = "http://localhost:8081/api/v1/qualis/"+15+"/TRABALHO-EM-EVENTOS/"+ano_inicial.value+"/"+ano_final.value;
+      console.log(filtered_url)
       axios
             .get(filtered_url)
             .then((response) => {
               const rawData = response.data;
-              console.log(rawData)
+              console.log("data",rawData)
+              data.value = rawData;
             })
             .catch((error) => {
               console.error(error);
