@@ -134,7 +134,6 @@
           .get(filtered_url)
           .then((response) => {
             const rawData = response.data;
-            console.log("a",rawData)
             rows.value = transformData(rawData, columns.value);
             carregar.value = false;
           })

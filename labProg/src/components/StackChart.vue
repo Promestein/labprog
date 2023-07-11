@@ -45,31 +45,31 @@
     },
     methods: {
       transformData(rawData) {
-        console.log("raw",rawData)
         let series = [];
         const qualis = ref(["A1", "A2", "A3", "A4"])
-        const anos = ref([2019, 2020, 2021, 2022, 2023])
+        const anos = ref([])
+        for (let i = this.anoInicial; i <= this.anoFinal; i++) {
+          anos.value.push(i);
+        }
   
         let hashObj = new Map();
         for (let i = 0; i < qualis.value.length; i++) {
           hashObj.set(qualis.value[i], Array(this.anoFinal-this.anoInicial).fill(0));
         }
-        console.log("hash",hashObj)
         for (let i = 0; i < rawData.length; i++) {
           let arr = hashObj.get(qualis.value[i]);
           for (let j = 0; j < anos.value.length; j++) {
             arr[j] = rawData[i][j];
           }
         }
-        console.log("hash",hashObj)
         for (let [key, value] of hashObj) {
           series.push({
             name: key,
             data: value,
           });
         }
-        console.log("series",series)
-  
+        this.chartOptions.xaxis.categories = anos.value;
+        console.log("a",this.chartOptions.xaxis.categories)
         this.series = series;
       },
   
@@ -87,7 +87,6 @@
       data: {
         handler(newVal, oldVal) {
           this.transformData(newVal);
-          // this.Carregar = true;
         },
         immediate: true,
       },
@@ -112,14 +111,10 @@
             textAnchor: "start",
           },
           xaxis: {
-            categories: [2019, 2020, 2021, 2022, 2023],
+            categories: [],
           },
           tooltip: {
             custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-              // console.log("series", series);
-              // console.log("seriesIndex", seriesIndex);
-              // console.log("dataPointIndex", dataPointIndex);
-              // console.log("w", w);
               const ano = w.config.xaxis.categories[dataPointIndex];
               const qualis = w.config.series[seriesIndex].name;
               const quantidade = w.config.series[seriesIndex].data[dataPointIndex];

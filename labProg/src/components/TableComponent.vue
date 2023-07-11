@@ -37,7 +37,7 @@
                 push
                 dense
                 padding="5px 6px"
-                @click="setStorageData(props.row)"
+                @click="detalhar(props.row)"
                 :to="url_child"
                 label="Detalhar"
                 no-wrap
@@ -94,6 +94,9 @@
         } else {
           return `${firstRowIndex}-${endRowIndex} de ${totalRowNumber}`;
         }
+      },
+      detalhar(row) {
+        this.$emit("detalhar",row);
       },
     },
   };

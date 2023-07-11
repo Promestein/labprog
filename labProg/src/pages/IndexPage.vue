@@ -6,48 +6,77 @@
         <div class="title-page">Filtros</div>
         <div>
           <div class="filtros">
-            <div class="filtro-conteudo">
-              <div>Programa:</div>
-                <q-select
-                  dense
-                  outlined
-                  v-model="programa"
-                  :options="programa_select"
-                  :display-value="programa"
-                />
+            <div class="filtros">
+              <div class="filtro-conteudo">
+                <div>Programa:</div>
+                  <q-select
+                    dense
+                    outlined
+                    v-model="programa"
+                    :options="programa_select"
+                    :display-value="programa"
+                  />
+              </div>
+              <div class="filtro-conteudo">
+                <div>Ano Inicial:</div>
+                  <q-input
+                    dense
+                    outlined
+                    v-model="ano_inicial"
+                    :display-value="ano_inicial"
+                  />
+              </div>
+              <div class="filtro-conteudo">
+                <div>Ano Final:</div>
+                  <q-input
+                    dense
+                    outlined
+                    v-model="ano_final"
+                    :display-value="ano_final"
+                  />
+              </div>
             </div>
-            <div class="filtro-conteudo">
-              <div>Ano Inicial:</div>
-                <q-input
-                  dense
-                  outlined
-                  v-model="ano_inicial"
-                  :display-value="ano_inicial"
-                />
-            </div>
-            <div class="filtro-conteudo">
-              <div>Ano Final:</div>
-                <q-input
-                  dense
-                  outlined
-                  v-model="ano_final"
-                  :display-value="ano_final"
-                />
+            <div class="botao-filtrar">
+              <q-btn color="purple" label="Filtrar" @click="filtrar"/>
             </div>
           </div>
         </div>
       </div>
-      <div class="chart">
-        <StackChart :data="data" :ano-final="ano_final" :ano-inicial="ano_inicial"></StackChart>
+      <div v-if="carregar" class="fundo-loading">
+        <q-spinner class="loading" size="160px" />
       </div>
-      <div>
-        <TableComponent
-          :rows="rows"
-          :columns="columns"
-          :filter_columns="filter_columns"
-          non_final_table="True"
-          table_height="1000"
-        />
+      <div v-if="!carregar">
+        <div class="title-page">Indicadores Capes</div>
+        <div class="indicadores">
+          <IndicadoresCapes class="indicador" squareColor="grey" firstLine="Total Produções" secondLine="100"/>
+          <IndicadoresCapes class="indicador" squareColor="cornflowerblue" firstLine="Total Produções" secondLine="100"/>
+          <IndicadoresCapes class="indicador" squareColor="darkseagreen" firstLine="Total Produções" secondLine="100"/>
+          <IndicadoresCapes class="indicador" squareColor="khaki" firstLine="Total Produções" secondLine="100"/>
+        </div>
+        <div>
+          <div v-if="carregar" class="fundo-loading">
+            <q-spinner class="loading" size="160px" />
+          </div>
+          <div class="chart" v-if="!carregar">
+            <StackChart :data="data" :ano-final="ano_final" :ano-inicial="ano_inicial"></StackChart>
+          </div>
+        </div>
+        <div>
+          <div v-if="carregar" class="fundo-loading">
+            <q-spinner class="loading" size="160px" />
+          </div>
+          <div v-if="!carregar">
+            <TableComponent
+              :rows="rows"
+              :columns="columns"
+              :filter_columns="filter_columns"
+              non_final_table="True"
+              table_height="1000"
+              @detalhar="detalhar"
+            />
+          </div>
+
+        </div>
       </div>
     </div>
   </q-page>
@@ -58,93 +87,17 @@ import { defineComponent, ref, onMounted } from 'vue'
 import axios from "axios";
 import TableComponent from '../components/TableComponent.vue'
 import StackChart from '../components/StackChart.vue'
+import IndicadoresCapes from '../components/Indicadores.vue'
+import { transformData } from 'src/utils/dados';
 
 export default defineComponent({
   name: 'IndexPage',
   components: {
     TableComponent,
-    StackChart
+    StackChart,
+    IndicadoresCapes,
   },
   setup(){
-    const rows = [
-      {
-        docente: "Docente 1",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 2",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 3",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 4",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 5",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 6",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-      {
-        docente: "Docente 7",
-        A1: 1,
-        A2: 2,
-        A3: 3,
-        A4: 4,
-        B1: 5,
-        B2: 6,
-        B3: 7,
-        B4: 8,
-      },
-    ]
     const columns = [
           {
             name: "docente",
@@ -209,6 +162,13 @@ export default defineComponent({
             sortable: true,
             align: "left",
           },
+          {
+            name: "C",
+            label: "C",
+            field: "C",
+            sortable: true,
+            align: "left",
+          },
     ]
     const filter_columns = [1,2,3]
 
@@ -218,23 +178,53 @@ export default defineComponent({
     const programa_select = ref(["PPGCC", "DCCMAPI"])
 
     const data = ref([])
+    const rows = ref([])
+    const carregar = ref(true)
+    const docente = ref("")
 
-    const get_data = async () => {
-      let filtered_url = "http://localhost:8081/api/v1/qualis/"+15+"/TRABALHO-EM-EVENTOS/"+ano_inicial.value+"/"+ano_final.value;
-      console.log(filtered_url)
+    const get_data = () => {
+      let url_qualis_grafico = "http://localhost:8081/api/v1/qualis/"+15+"/TRABALHO-EM-EVENTOS/"+ano_inicial.value+"/"+ano_final.value;
       axios
-            .get(filtered_url)
+            .get( url_qualis_grafico)
             .then((response) => {
               const rawData = response.data;
-              console.log("data",rawData)
               data.value = rawData;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+      
+      let url_producao_docente = "http://localhost:8081/api/docente/obter_producoes/"+ano_inicial.value+"/"+ano_final.value;
+      axios
+            .get(url_producao_docente)
+            .then((response) => {
+              const rawData = response.data;
+              const dataRows = ref([])
+              rawData.forEach(i =>{
+                let aux = []
+                aux.push(i.docente.nome)
+                aux = aux.concat(i.qualis)
+                dataRows.value.push(aux)
+              })
+              rows.value = transformData(dataRows.value,columns)
+              carregar.value = false
             })
             .catch((error) => {
               console.error(error);
             });
     }
 
+    const filtrar = () => {
+        carregar.value = true
+        get_data()
+    }
+
+    const detalhar = (row) => {
+      
+    }
+
     onMounted(() => {
+        carregar.value = true
         get_data()
       })
 
@@ -246,7 +236,11 @@ export default defineComponent({
       ano_final,
       programa,
       programa_select,
-      data
+      data,
+      carregar,
+      get_data,
+      filtrar,
+      detalhar,
     }
 
   },
@@ -257,7 +251,7 @@ export default defineComponent({
 .title-page {
   font-size: 1.5em;
   margin-top: 1em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 .container {
     width: 100%;
@@ -271,6 +265,7 @@ export default defineComponent({
 .filtro-conteudo {
   width: 15vw;
   height: auto;
+  margin-right: 2em;
 }
 .chart{
   margin-top: 2em;
@@ -280,4 +275,30 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
 }
+.indicadores{
+  display: flex;
+  flex-direction: row;
+}
+.indicador{
+  margin-right: 2em;
+}
+.botao-filtrar{
+  margin-top: 1.55em;
+  margin-bottom: 2em;
+  width: 10vw;
+  height: auto;
+  margin-right: 2em;
+}
+.fundo-loading {
+    background-color: rgb(250, 238, 255);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+  }
+  
+  .loading {
+    color: var(--main-color);
+  }
 </style>
