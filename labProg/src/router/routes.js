@@ -21,6 +21,10 @@ const routes = [
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
+  },
+  {
+    path: "/logout",
+    component: () => import("pages/LogoutPage.vue"),
   }
 ]
 
