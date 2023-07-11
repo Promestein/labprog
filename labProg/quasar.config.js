@@ -30,7 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-      
+      //"keycloak",
       'axios',
     ],
 
@@ -64,6 +64,14 @@ module.exports = configure(function (/* ctx */) {
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
+      env: {
+        API_URL: "http://localhost:8080/api/",
+        HOME_PAGE: "http://localhost:9000/",
+        KEYCLOAK_URL: "http://localhost:8080/",
+        KEYCLOAK_REALM: "SPPG",
+        KEYCLOAK_CLIENTID: "WEB",
+        KEYCLOAK_LOGOUT_URI: "http://localhost:9000/logout/",
+      },
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
