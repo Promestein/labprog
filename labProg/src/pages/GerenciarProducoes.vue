@@ -27,7 +27,7 @@
         </div>
         <div>
             <ModalProducoes v-if="showModalOrientacoes" title="Orientacoes" @fechar="fecharModal">
-                
+
             </ModalProducoes>
             <ModalProducoes v-if="showModalEstatisticas" title="Estatisticas" @fechar="fecharModal">
                 <div>Qtd. alunos de Graduação:</div>
@@ -67,7 +67,7 @@
       </div>
     </q-page>
   </template>
-  
+
   <script>
   import { defineComponent, ref, onMounted } from 'vue'
   import axios from "axios";
@@ -77,7 +77,7 @@
     loadData,
     transformData,
   } from "src/utils/dados.js";
-  
+
   export default defineComponent({
     name: 'GerenciarProducoes',
     components: {
@@ -106,7 +106,7 @@
             { name: 'estatisticas', label: 'Estatísticas', field: 'estatisticas', align: 'left', sortable: true },
       ]
       const filter_columns = [1,2,3]
-  
+
       const ano_inicial = ref(2019)
       const ano_final = ref(2023)
       const programa = ref("PPGCC")
@@ -114,7 +114,7 @@
         const qtd_mestrado = ref(0)
         const qtd_doutorado = ref(0)
       const programa_select = ref(["PPGCC", "DCCMAPI"])
-  
+
       const data = ref([[1,2,3,4,4], [3,3,2,3,4], [1,4,2,5,5], [2,2,2,2,2,]])
 
       const showModalOrientacoes = ref(false)
@@ -129,7 +129,7 @@
       }
 
       const get_data = async () => {
-        let filtered_url = "http://localhost:8083/api/producao/obterProducao";
+        let filtered_url = "http://localhost:8081/api/producao/obterProducao";
         axios
           .get(filtered_url)
           .then((response) => {
@@ -146,7 +146,7 @@
       onMounted(() => {
         get_data()
       })
-  
+
       return {
         rows,
         columns,
@@ -164,11 +164,11 @@
         showModalEstatisticas,
         fecharModal,
       }
-  
+
     },
   })
   </script>
-  
+
   <style>
   .title-page {
     font-size: 1.5em;
@@ -197,5 +197,4 @@
     align-items: center;
   }
   </style>
-  
-  
+

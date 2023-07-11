@@ -220,7 +220,7 @@ export default defineComponent({
     const data = ref([[1,2,3,4,4], [3,3,2,3,4], [1,4,2,5,5], [2,2,2,2,2,]])
 
     const get_data = async () => {
-      let filtered_url = "http://localhost:8083/api/v1/qualis/"+15+"/evento/"+ano_inicial.value+"/"+ano_final.value;
+      let filtered_url = "http://localhost:8081/api/v1/qualis/"+15+"/evento/"+ano_inicial.value+"/"+ano_final.value;
       axios
             .get(filtered_url)
             .then((response) => {
