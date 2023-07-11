@@ -8,9 +8,6 @@
               <a href="/" class="tab">
                 <q-tab class="tab" name="programa" Label="Programa">Programas</q-tab>
               </a>
-              <a href="/#/docente" class="tab">
-              <q-tab class="tab" name="docente" Label="Docente">Docentes</q-tab>
-              </a>
               <a href="/#/gerenciar_producoes" class="tab">
               <q-tab class="tab" name="producoes" Label="Producoes">Produções</q-tab>
               </a>

@@ -48,10 +48,10 @@
       <div v-if="!carregar">
         <div class="title-page">Indicadores Capes</div>
         <div class="indicadores">
-          <IndicadoresCapes class="indicador" squareColor="grey" firstLine="Total Produções" secondLine="100"/>
-          <IndicadoresCapes class="indicador" squareColor="cornflowerblue" firstLine="Total Produções" secondLine="100"/>
-          <IndicadoresCapes class="indicador" squareColor="darkseagreen" firstLine="Total Produções" secondLine="100"/>
-          <IndicadoresCapes class="indicador" squareColor="khaki" firstLine="Total Produções" secondLine="100"/>
+          <IndicadoresCapes class="indicador" squareColor="grey" firstLine="Total Produções" :secondLine="totalProducoes"/>
+          <IndicadoresCapes class="indicador" squareColor="cornflowerblue" firstLine="I Geral" :secondLine="indiceGeral"/>
+          <IndicadoresCapes class="indicador" squareColor="darkseagreen" firstLine="I Restrito" :secondLine="indiceRest"/>
+          <IndicadoresCapes class="indicador" squareColor="khaki" firstLine="I Não Restrito" :secondLine="indiceNRest"/>
         </div>
         <div>
           <div v-if="carregar" class="fundo-loading">
@@ -180,10 +180,14 @@ export default defineComponent({
     const data = ref([])
     const rows = ref([])
     const carregar = ref(true)
-    const docente = ref("")
+    const docentes = ref([])
+    const totalProducoes = ref(0)
+    const indiceGeral = ref(0)
+    const indiceNRest = ref(0)
+    const indiceRest = ref(0)
 
     const get_data = () => {
-      let url_qualis_grafico = "http://localhost:8081/api/v1/qualis/"+15+"/TRABALHO-EM-EVENTOS/"+ano_inicial.value+"/"+ano_final.value;
+      let url_qualis_grafico = "http://localhost:8081/api/v1/qualis/"+15+"/"+ano_inicial.value+"/"+ano_final.value;
       axios
             .get( url_qualis_grafico)
             .then((response) => {
@@ -200,14 +204,32 @@ export default defineComponent({
             .then((response) => {
               const rawData = response.data;
               const dataRows = ref([])
+              const docentesList = ref([])
               rawData.forEach(i =>{
                 let aux = []
+                let auxDocente = []
                 aux.push(i.docente.nome)
                 aux = aux.concat(i.qualis)
                 dataRows.value.push(aux)
+                auxDocente.push({"id":i.docente.id, "nome":i.docente.nome})
+                docentesList.value.push(auxDocente)
               })
               rows.value = transformData(dataRows.value,columns)
+              docentes.value = docentesList.value
               carregar.value = false
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+      let url_indicadores = "http://localhost:8081/api/v1/qualis/indice/"+15+"/"+ano_inicial.value+"/"+ano_final.value;
+      axios
+            .get(url_indicadores)
+            .then((response) => {
+              const rawData = response.data;
+              indiceGeral.value = rawData.indice.indiceGeral.toFixed(2)
+              indiceNRest.value = rawData.indice.indiceNRest.toFixed(2)
+              indiceRest.value = rawData.indice.indiceRest.toFixed(2)
+              totalProducoes.value = rawData.producoes.length.toFixed(2)
             })
             .catch((error) => {
               console.error(error);
@@ -220,7 +242,10 @@ export default defineComponent({
     }
 
     const detalhar = (row) => {
-      
+      const searchIndex = docentes.value.findIndex((docente) => docente[0].nome==row.docente);
+      localStorage.setItem("docenteId", docentes.value[searchIndex][0].id);
+      localStorage.setItem("docenteNome", docentes.value[searchIndex][0].nome);
+      window.location.href = "/#/docente";
     }
 
     onMounted(() => {
@@ -238,6 +263,11 @@ export default defineComponent({
       programa_select,
       data,
       carregar,
+      docentes,
+      totalProducoes,
+      indiceGeral,
+      indiceNRest,
+      indiceRest,
       get_data,
       filtrar,
       detalhar,
@@ -255,8 +285,8 @@ export default defineComponent({
 }
 .container {
     width: 100%;
-    padding-right: 300px;
-    padding-left: 300px;
+    padding-right: 100px;
+    padding-left: 100px;
   }
 .filtros {
   display: flex;

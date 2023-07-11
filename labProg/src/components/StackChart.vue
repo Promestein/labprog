@@ -4,7 +4,7 @@
     </div>
     <div class="chart" v-else>
       <div class="text-chart">
-        Producao vs Qualis
+        {{ titulo }}
       </div>
       <br />
       <div class="chart-container">
@@ -30,6 +30,10 @@
       apexcharts: VueApexCharts,
     },
     props: {
+      titulo: {
+        type: String,
+        required: true,
+      },
       anoInicial: {
         type: String,
         required: true,

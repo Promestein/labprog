@@ -1,13 +1,14 @@
 <template>
     <div class="q-pa-md">
       <q-table class="tableCss"
+        :title="titulo"
         flat
         bordered
         :rows-per-page-options="[15, 30, 50, 100, 500, 1000]"
         :rows="rows"
         :columns="cols"
         :row-key="cols[0].name"
-        no-data-label="Não há dados disponíveis. Selecione outros filtros e clique em 'Filtrar'."
+        no-data-label="Não há dados disponíveis para estes filtros."
         :style="{ 'max-height': table_height - 70 + 'px' }"
         rows-per-page-label="Linhas por página:"
         :pagination-label="getPaginationLabel"
@@ -56,6 +57,10 @@
     //   showColumns();
     // },
     props: {
+      titulo: {
+        type: String,
+        required: true,
+      },
       rows: {
         type: Array,
         required: true,
