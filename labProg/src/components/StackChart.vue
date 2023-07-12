@@ -19,11 +19,11 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import VueApexCharts from "vue3-apexcharts";
   import { defineComponent, ref } from 'vue'
-  
+
   export default {
     name: "StackChart",
     components: {
@@ -55,7 +55,7 @@
         for (let i = this.anoInicial; i <= this.anoFinal; i++) {
           anos.value.push(i);
         }
-  
+
         let hashObj = new Map();
         for (let i = 0; i < qualis.value.length; i++) {
           hashObj.set(qualis.value[i], Array(this.anoFinal-this.anoInicial).fill(0));
@@ -76,7 +76,7 @@
         console.log("a",this.chartOptions.xaxis.categories)
         this.series = series;
       },
-  
+
       dataPointSelection(event, chartContext, config) {
         const mesReferencia = config.dataPointIndex + 1;
         const qtdCargo = chartContext.opts.series[config.seriesIndex].name;
@@ -84,7 +84,6 @@
           chartContext.opts.series[config.seriesIndex].data[
             config.dataPointIndex
           ];
-        window.location.href = "/#/relatorios/acumulo-cargos-ente";
       },
     },
     watch: {
@@ -137,7 +136,7 @@
     },
   };
   </script>
-  
+
   <style>
   .fundo-loading {
     background-color: rgb(244, 244, 244);
@@ -152,9 +151,8 @@
   font-weight: 600;
   font-size: 14px;
   }
-  
+
   .loading {
     color: var(--main-color);
   }
   </style>
-  
