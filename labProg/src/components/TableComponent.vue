@@ -7,6 +7,7 @@
         :rows-per-page-options="[15, 30, 50, 100, 500, 1000]"
         :rows="rows"
         :columns="cols"
+        wrap-cells
         :row-key="cols[0].name"
         no-data-label="Não há dados disponíveis para estes filtros."
         :style="{ 'max-height': table_height - 70 + 'px' }"
@@ -27,7 +28,7 @@
           <!-- Linha -->
           <q-tr :props="props">
             <!-- Colunas dos dados -->
-            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <q-td class="line" v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.value }}
             </q-td>
             <!-- Coluna do botão de detalhar -->
@@ -110,6 +111,7 @@
   <style scoped>
   .tableCss {
     height: 100%;
+    /* max-width: 500px; */
   }
   thead tr:first-child th {
     position: sticky;

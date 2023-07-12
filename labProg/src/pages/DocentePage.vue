@@ -11,6 +11,7 @@
                 <q-input
                   dense
                   outlined
+                  type="number"
                   v-model="ano_inicial"
                   :display-value="ano_inicial"
                 />
@@ -20,6 +21,7 @@
                 <q-input
                   dense
                   outlined
+                  type="number"
                   v-model="ano_final"
                   :display-value="ano_final"
                 />
@@ -220,6 +222,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
       let url_qualis_congresso = "http://localhost:8081/api/v1/qualis/congressos/"+idDocente+"/"+ano_inicial.value+"/"+ano_final.value;
       axios
@@ -230,6 +233,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
 
       let url_orientacao_docente = "http://localhost:8081/api/docente/obter_orientacoes/"+idDocente+"/"+ano_inicial.value+"/"+ano_final.value;
@@ -251,6 +255,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
 
       let url_artigos_docente = "http://localhost:8081/api/docente/obter_producoes/"+idDocente+"/"+ano_inicial.value+"/"+ano_final.value;
@@ -272,6 +277,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
 
       let url_tecnicas_docente = "http://localhost:8081/api/docente/obter_tecnicas/"+idDocente+"/"+ano_inicial.value+"/"+ano_final.value;
@@ -291,6 +297,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
 
       let url_indicadores = "http://localhost:8081/api/v1/qualis/indice_docente/"+idDocente+"/"+ano_inicial.value+"/"+ano_final.value;
@@ -305,6 +312,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
 
     }

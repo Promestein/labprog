@@ -22,6 +22,7 @@
                   <q-input
                     dense
                     outlined
+                    type="number"
                     v-model="ano_inicial"
                     :display-value="ano_inicial"
                   />
@@ -31,6 +32,7 @@
                   <q-input
                     dense
                     outlined
+                    type="number"
                     v-model="ano_final"
                     :display-value="ano_final"
                   />
@@ -196,6 +198,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
       
       let url_producao_docente = "http://localhost:8081/api/docente/obter_producoes/"+ano_inicial.value+"/"+ano_final.value;
@@ -220,6 +223,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
       let url_indicadores = "http://localhost:8081/api/v1/qualis/indice/"+15+"/"+ano_inicial.value+"/"+ano_final.value;
       axios
@@ -233,6 +237,7 @@ export default defineComponent({
             })
             .catch((error) => {
               console.error(error);
+              carregar.value = false
             });
     }
 
