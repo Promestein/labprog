@@ -17,18 +17,18 @@
         <template v-slot:header="props">
           <!-- Cabeçalho -->
           <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            <q-th v-for="col in props.cols" :key="col.name" :props="props" style="color: white; font-size: 14px;">
               {{ col.label }}
             </q-th>
             <q-th v-if="non_final_table" auto-width />
           </q-tr>
         </template>
-  
+
         <template v-slot:body="props">
           <!-- Linha -->
           <q-tr :props="props">
             <!-- Colunas dos dados -->
-            <q-td class="line" v-for="col in props.cols" :key="col.name" :props="props">
+            <q-td class="line" v-for="col in props.cols" :key="col.name" :props="props" style="color: black; font-size: 14px; font-weight:400">
               {{ col.value }}
             </q-td>
             <!-- Coluna do botão de detalhar -->
@@ -50,7 +50,7 @@
       </q-table>
     </div>
   </template>
-  
+
   <script>
   export default {
     name: "TableComponent",
@@ -92,7 +92,7 @@
         cols: this.columns,
       };
     },
-  
+
     methods: {
       getPaginationLabel(firstRowIndex, endRowIndex, totalRowNumber) {
         if (totalRowNumber == 1) {
@@ -107,11 +107,12 @@
     },
   };
   </script>
-  
+
   <style scoped>
   .tableCss {
     height: 100%;
     /* max-width: 500px; */
+    background-color: #e9d5ff;
   }
   thead tr:first-child th {
     position: sticky;
@@ -119,6 +120,10 @@
     background: white;
     z-index: 1000;
   }
-
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th{
+    background-color: #2e1065;
+    font-weight: bold;
+  }
   </style>
-  

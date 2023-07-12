@@ -9,7 +9,7 @@ export const loadData = (url, filtros, columns) => {
     }
     return api_url;
   };
-  
+
   export const transformData = (data, columns, filtros) => {
     let rows = [];
     for (let i = 0; i < data.length; i++) {

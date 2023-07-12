@@ -1,86 +1,90 @@
 <template>
-  <q-page class="q-pa-sm" id="page">
+  <q-page class="q-pa-sm page" id="page">
+    <div class="background">
     <div class="container">
-      <div >
-        <div class="title-page">Docente: {{docente}}</div>
-        <div class="title-page">Filtros</div>
-        <div>
-          <div class="filtros">
-            <div class="filtro-conteudo">
-              <div>Ano Inicial:</div>
-                <q-input
-                  dense
-                  outlined
-                  type="number"
-                  v-model="ano_inicial"
-                  :display-value="ano_inicial"
-                />
-            </div>
-            <div class="filtro-conteudo">
-              <div>Ano Final:</div>
-                <q-input
-                  dense
-                  outlined
-                  type="number"
-                  v-model="ano_final"
-                  :display-value="ano_final"
-                />
-            </div>
-            <div class="botao-filtrar">
-              <q-btn color="purple" label="Filtrar" @click="filtrar"/>
+      <div class="background">
+        <div class="background">
+          <div class="title-page">Docente: {{docente}}</div>
+          <div class="title-page">Filtros</div>
+          <div>
+            <div class="filtros">
+              <div class="filtro-conteudo">
+                <div>Ano Inicial:</div>
+                  <q-input
+                    dense
+                    outlined
+                    type="number"
+                    v-model="ano_inicial"
+                    :display-value="ano_inicial"
+                  />
+              </div>
+              <div class="filtro-conteudo">
+                <div>Ano Final:</div>
+                  <q-input
+                    dense
+                    outlined
+                    type="number"
+                    v-model="ano_final"
+                    :display-value="ano_final"
+                  />
+              </div>
+              <div class="botao-filtrar">
+                <q-btn color="purple" label="Filtrar" @click="filtrar"/>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div v-if="carregar" class="fundo-loading">
-        <q-spinner class="loading" size="160px" />
-      </div>
-      <div v-if="!carregar">
-        <div class="title-page">Indicadores Capes</div>
-        <div class="indicadores">
-          <IndicadoresCapes class="indicador" squareColor="grey" firstLine="Total Produções" :secondLine="totalProducoes"/>
-          <IndicadoresCapes class="indicador" squareColor="cornflowerblue" firstLine="I Geral" :secondLine="indiceGeral"/>
-          <IndicadoresCapes class="indicador" squareColor="darkseagreen" firstLine="I Restrito" :secondLine="indiceRest"/>
-          <IndicadoresCapes class="indicador" squareColor="khaki" firstLine="I Não Restrito" :secondLine="indiceNRest"/>
+        <div v-if="carregar" class="fundo-loading">
+          <q-spinner class="loading" size="160px" />
         </div>
-        <div class="chart">
-          <StackChart titulo="Produção em Periódicos vs Qualis" :data="dataGrafico1" :ano-final="ano_final" :ano-inicial="ano_inicial"></StackChart>
-        </div>
-        <div class="chart">
-          <StackChart titulo="Produção em Congressos vs Qualis" :data="dataGrafico2" :ano-final="ano_final" :ano-inicial="ano_inicial"></StackChart>
-        </div>
-        <div>
-          <TableComponent
-            titulo="Orientações"
-            :rows="rowsOrientacao"
-            :columns="columnsOrientacao"
-            :filter_columns="filter_columns"
-            non_final_table="True"
-            table_height="1000"
-          />
-        </div>
-        <div>
-          <TableComponent
-            titulo="Artigos"
-            :rows="rowsArtigos"
-            :columns="columnsArtigos"
-            :filter_columns="filter_columns"
-            non_final_table="True"
-            table_height="1000"
-          />
-        </div>
-        <div>
-          <TableComponent
-            titulo="Técnicas"
-            :rows="rowsTecnicas"
-            :columns="columnsTecnicas"
-            :filter_columns="filter_columns"
-            non_final_table="True"
-            table_height="1000"
-          />
+        <div v-if="!carregar">
+          <div class="title-page">Indicadores Capes</div>
+          <div class="indicadores">
+            <IndicadoresCapes class="indicador" squareColor="grey" firstLine="Total Produções" :secondLine="totalProducoes"/>
+            <IndicadoresCapes class="indicador" squareColor="cornflowerblue" firstLine="I Geral" :secondLine="indiceGeral"/>
+            <IndicadoresCapes class="indicador" squareColor="darkseagreen" firstLine="I Restrito" :secondLine="indiceRest"/>
+            <IndicadoresCapes class="indicador" squareColor="khaki" firstLine="I Não Restrito" :secondLine="indiceNRest"/>
+          </div>
+          <div class="chart">
+            <StackChart titulo="Produção em Periódicos vs Qualis" :data="dataGrafico1" :ano-final="ano_final" :ano-inicial="ano_inicial"></StackChart>
+          </div>
+          <div class="chart">
+            <StackChart titulo="Produção em Congressos vs Qualis" :data="dataGrafico2" :ano-final="ano_final" :ano-inicial="ano_inicial"></StackChart>
+          </div>
+          <div>
+            <TableComponent
+              titulo="Orientações"
+              :rows="rowsOrientacao"
+              :columns="columnsOrientacao"
+              :filter_columns="filter_columns"
+              non_final_table="True"
+              table_height="1000"
+            />
+          </div>
+          <div>
+            <TableComponent
+              titulo="Artigos"
+              :rows="rowsArtigos"
+              :columns="columnsArtigos"
+              :filter_columns="filter_columns"
+              non_final_table="True"
+              table_height="1000"
+            />
+          </div>
+          <div>
+            <TableComponent
+              titulo="Técnicas"
+              :rows="rowsTecnicas"
+              :columns="columnsTecnicas"
+              :filter_columns="filter_columns"
+              non_final_table="True"
+              table_height="1000"
+            />
+          </div>
         </div>
       </div>
     </div>
+  </div>
   </q-page>
 </template>
 
@@ -316,7 +320,7 @@ export default defineComponent({
             });
 
     }
-      
+
 
     const filtrar = () => {
         carregar.value = true
@@ -360,7 +364,11 @@ export default defineComponent({
   margin-top: 1em;
   margin-bottom: 1em;
 }
+.page{
+  background-color: rgb(250, 238, 255);
+}
 .container {
+    /* background-color: rgb(250, 238, 255); */
     width: 100%;
     padding-right: 100px;
     padding-left: 100px;
@@ -396,14 +404,14 @@ export default defineComponent({
   margin-right: 2em;
 }
 .fundo-loading {
-    background-color: rgb(250, 238, 255);
+    background-color: #e9d5ff;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 5px;
   }
-  
+
   .loading {
     color: var(--main-color);
   }

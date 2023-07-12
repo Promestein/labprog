@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm" id="page">
+  <q-page class="page q-pa-sm" id="page">
     <div class="container">
       <div >
         <div class="title-page">Programa</div>
@@ -200,7 +200,7 @@ export default defineComponent({
               console.error(error);
               carregar.value = false
             });
-      
+
       let url_producao_docente = "http://localhost:8081/api/docente/obter_producoes/"+ano_inicial.value+"/"+ano_final.value;
       axios
             .get(url_producao_docente)
@@ -283,6 +283,9 @@ export default defineComponent({
 </script>
 
 <style>
+.page{
+  background-color: rgb(251, 240, 255);
+}
 .title-page {
   font-size: 1.5em;
   margin-top: 1em;
@@ -332,7 +335,7 @@ export default defineComponent({
     justify-content: center;
     margin-top: 5px;
   }
-  
+
   .loading {
     color: var(--main-color);
   }

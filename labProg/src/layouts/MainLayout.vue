@@ -99,11 +99,10 @@ export default {
   }
 
   .navbar {
-	background: #fff;
-	padding-left: 16px;
-	padding-right: 16px;
-	border-bottom: 1px solid #dfe3e8;
-	border-radius: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-bottom: 1px solid;
+    border-radius: 0;
   }
   .navbar-brand {
     display: inline-block;
@@ -113,14 +112,15 @@ export default {
     font-size: 1.25rem;
     line-height: inherit;
     white-space: nowrap;
+    color: #ffffff;
   }
   .main-header {
-  border-bottom: 1px solid #dee2e6;
-  z-index: 1034;
+    background-color: #581c87;
+    z-index: 1034;
   }
 
   .tab {
     text-decoration: none;
-    color: #000;
+    color: #ffffff;
   }
 </style>

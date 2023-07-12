@@ -7,7 +7,7 @@
       </div>
     </div>
   </template>
-  
+
   <script>
     import { defineComponent } from 'vue'
 
@@ -29,29 +29,30 @@
         },
     })
   </script>
-  
+
   <style scoped>
   .rectangle {
     display: flex;
     align-items: center;
-    background-color: rgb(230, 225, 225);
+    background-color: #e9d5ff;
     width: 25%;
     height: 65px;
     border-radius: 5px;
     /* margin-top: 15px; */
   }
-  
+
   .square {
     width: 50px;
     height: 50px;
     border-radius: 5px;
     margin-left: 10px;
-    
+
   }
-  
+
   .text {
     margin-left: 10px;
     display: flex;
     flex-direction: column;
+    font-weight: bold;
   }
   </style>

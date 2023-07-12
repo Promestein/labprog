@@ -1,26 +1,20 @@
 <template>
-    <q-page class="q-pa-sm" id="page">
+    <q-page class="q-pa-sm page" id="page">
       <div class="container">
         <div >
           <div>
             <div class="filtros">
               <div class="filtro-conteudo">
-                <div>Ano Inicial:</div>
-                  <q-input
+                <div>Docente:</div>
+                  <q-select
                     dense
                     outlined
-                    v-model="ano_inicial"
-                    :display-value="ano_inicial"
+                    v-model="docente"
+                    :options="docentes_select"
                   />
               </div>
-              <div class="filtro-conteudo">
-                <div>Ano Final:</div>
-                  <q-input
-                    dense
-                    outlined
-                    v-model="ano_final"
-                    :display-value="ano_final"
-                  />
+              <div class="botao-filtrar">
+                <q-btn color="purple" label="Filtrar" @click="filtrar"/>
               </div>
             </div>
           </div>
@@ -29,7 +23,7 @@
             <ModalProducoes v-if="showModalOrientacoes" title="Orientacoes" @fechar="fecharModal">
 
             </ModalProducoes>
-            <ModalProducoes v-if="showModalEstatisticas" title="Estatisticas" @fechar="fecharModal">
+            <ModalProducoes v-if="showModalEstatisticas" title="Estatisticas" @fechar="fecharModal" @salvarEstatisticas="salvarEstatisticas">
                 <div>Qtd. alunos de Graduação:</div>
                     <q-input
                         dense
@@ -53,7 +47,10 @@
                     />
             </ModalProducoes>
         </div>
-        <div>
+        <div v-if="carregar" class="fundo-loading">
+          <q-spinner class="loading" size="160px" />
+        </div>
+        <div v-if="!carregar">
           <TableEditarComponent
             :rows="rows"
             :columns="columns"
@@ -61,7 +58,7 @@
             non_final_table="True"
             table_height="1000"
             @openModalA="showModalOrientacoes = true"
-            @openModalB="showModalEstatisticas = true"
+            @openModalB="modalEstatisticas"
           />
         </div>
       </div>
@@ -77,6 +74,7 @@
     loadData,
     transformData,
   } from "src/utils/dados.js";
+import { Loading } from 'quasar';
 
   export default defineComponent({
     name: 'GerenciarProducoes',
@@ -85,26 +83,15 @@
     },
 
     setup(){
-        const docente = ref("Geraldo Braz Júnior")
-        const rows = [
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },
-        { discente: 'João', titulo: 'Título', tipo: 'Dissertação', ano: '2020', local: 'UFSC', orientacao: 'Sim', estatisticas: 'Estatísticas' },]
-      const columns = [
-            //adicionar colunas de Ano	Docente	Título	Local	Orientação?	Estatísticas
-            { name: 'discente', label: 'Discente', field: 'discente', align: 'left', sortable: true },
-            { name: 'titulo', label: 'Título', field: 'titulo', align: 'left', sortable: true },
-            { name: 'tipo', label: 'Tipo', field: 'tipo', align: 'left', sortable: true },
+        // const docente = ref("Geraldo Braz Júnior")
+      const rows = ref([])
+      const columns = ref([
             { name: 'ano', label: 'Ano', field: 'ano', align: 'left', sortable: true },
+            { name: 'titulo', label: 'Título', field: 'titulo', align: 'left', sortable: true },
             { name: 'local', label: 'Local', field: 'local', align: 'left', sortable: true },
             { name: 'orientacao', label: 'Orientação?', field: 'orientacao', align: 'left', sortable: true },
             { name: 'estatisticas', label: 'Estatísticas', field: 'estatisticas', align: 'left', sortable: true },
-      ]
+      ])
       const filter_columns = [1,2,3]
 
       const ano_inicial = ref(2019)
@@ -114,11 +101,19 @@
         const qtd_mestrado = ref(0)
         const qtd_doutorado = ref(0)
       const programa_select = ref(["PPGCC", "DCCMAPI"])
+      const carregar = ref(false)
+
+      const docente = ref("Geraldo Braz Júnior")
+      const docentes_select = ref([])
+      const docentes_ids = ref([])
+      const producoes = ref([])
+      const idProducao = ref(0)
+
 
       const data = ref([[1,2,3,4,4], [3,3,2,3,4], [1,4,2,5,5], [2,2,2,2,2,]])
 
       const showModalOrientacoes = ref(false)
-        const showModalEstatisticas = ref(false)
+      const showModalEstatisticas = ref(false)
 
       const fecharModal = () => {
         showModalOrientacoes.value = false
@@ -128,13 +123,75 @@
         qtd_doutorado.value = 0
       }
 
-      const get_data = async () => {
-        let filtered_url = "http://localhost:8081/api/producao/obterProducao";
+      const get_data = async (id) => {
+        let filtered_url = "http://localhost:8081/api/producao/obterProducao/"+id;
         axios
           .get(filtered_url)
           .then((response) => {
             const rawData = response.data;
-            rows.value = transformData(rawData, columns.value);
+            console.log(rawData)
+            let data = []
+            for (let i = 0; i < rawData.length; i++) {
+              const aux = []
+              producoes.value.push({"id":rawData[i].id,"titulo":rawData[i].titulo})
+              if(rawData[i].ano == null){
+                aux.push("Não informado")
+              }else{
+                aux.push(rawData[i].ano)
+              }
+              if(rawData[i].titulo == null){
+                aux.push("Não informado")
+              }else{
+                aux.push(rawData[i].titulo)
+              }
+              if(rawData[i].nomeLocal == null){
+                aux.push("Não informado")
+              }else{
+                aux.push(rawData[i].nomeLocal)
+              }
+              if(rawData[i].orientacao == null){
+                aux.push("Não informado")
+              }else{
+                aux.push(rawData[i].orientacao)
+              }
+              let estatisticas = ""
+              if(rawData[i].qtdGrad == null){
+                estatisticas+=("0G|")
+              }else{
+                estatisticas+=rawData[i].qtdGrad+"G|"
+              }
+              if(rawData[i].qtdMestrado == null){
+                estatisticas+="0M|"
+              }else{
+                estatisticas+=rawData[i].qtdMestrado+"M|"
+              }
+              if(rawData[i].qtdDoutorado == null){
+                estatisticas+="0D"
+              }else{
+                estatisticas+=rawData[i].qtdDoutorado+"D"
+              }
+              aux.push(estatisticas)
+              data.push(aux)
+            }
+            rows.value = transformData(data, columns.value);
+            carregar.value = false;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      const get_docentes = async () => {
+        let docentes_url = "http://localhost:8081/api/docente/obter_docentes";
+        axios
+          .get(docentes_url)
+          .then((response) => {
+            const rawData = response.data;
+            docentes_ids.value = []
+            docentes_select.value = []
+            rawData.forEach(i => {
+              docentes_ids.value.push(i.id)
+              docentes_select.value.push(i.nome)
+            });
             carregar.value = false;
           })
           .catch((error) => {
@@ -142,8 +199,40 @@
           });
       }
 
+      const salvarEstatisticas = async()=>{
+        let estatisticas_url = "http://localhost:8081/api/producao/setandoEstaticticas/"+idProducao.value+"/"+qtd_graduacao.value+"/"+qtd_mestrado.value+"/"+qtd_doutorado.value
+        axios
+          .post(estatisticas_url)
+          .then((response) => {
+            console.log(response)
+            fecharModal()
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+
+      const modalEstatisticas = (bool) => {
+        const nome = bool.producao.titulo
+        producoes.value.forEach(i => {
+          if(i.titulo === nome){
+            idProducao.value = i.id
+          }
+        });
+        showModalEstatisticas.value = bool.open
+      }
+
+      const filtrar = () =>{
+        carregar.value = true
+        const id = docentes_select.value.findIndex(i => i == docente.value)
+        const docente_id = docentes_ids.value[id]
+        get_data(docente_id)
+      }
+
       onMounted(() => {
-        get_data()
+        carregar.value = true
+        get_docentes()
+        get_data(15)
       })
 
       return {
@@ -153,15 +242,21 @@
         ano_inicial,
         ano_final,
         programa,
+        carregar,
         qtd_graduacao,
         qtd_mestrado,
         qtd_doutorado,
         programa_select,
         data,
+        docentes_select,
+        docentes_ids,
         docente,
         showModalOrientacoes,
         showModalEstatisticas,
         fecharModal,
+        filtrar,
+        modalEstatisticas,
+        salvarEstatisticas,
       }
 
     },
@@ -169,6 +264,9 @@
   </script>
 
   <style>
+  .page{
+    background-color: rgb(251, 240, 255);
+  }
   .title-page {
     font-size: 1.5em;
     margin-top: 1em;
@@ -194,6 +292,31 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .fundo-loading {
+    background-color: #e9d5ff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+  }
+  .botao-filtrar{
+  margin-top: 1.55em;
+  margin-bottom: 2em;
+  width: 10vw;
+  height: auto;
+  margin-right: 2em;
+}
+.filtro-conteudo {
+  width: 15vw;
+  height: auto;
+  margin-right: 2em;
+}
+
+  .loading {
+    color: var(--main-color);
   }
   </style>
 

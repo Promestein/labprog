@@ -3,6 +3,8 @@
       <q-table class="tableCss"
         flat
         bordered
+        table-header-class="bold"
+        table-class="text-black"
         :rows-per-page-options="[15, 30, 50, 100, 500, 1000]"
         :rows="rows"
         :columns="cols"
@@ -15,18 +17,18 @@
         <template v-slot:header="props">
           <!-- Cabeçalho -->
           <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            <q-th v-for="col in props.cols" :key="col.name" :props="props" style="color: white; font-size: 14px;">
               {{ col.label }}
             </q-th>
             <q-th v-if="non_final_table" auto-width />
           </q-tr>
         </template>
-  
+
         <template v-slot:body="props">
           <!-- Linha -->
           <q-tr :props="props">
             <!-- Colunas dos dados -->
-            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <q-td v-for="col in props.cols" :key="col.name" :props="props" style="color: black; font-size: 14px; font-weight:400">
               {{ col.value }}
             </q-td>
             <!-- Coluna do botão de detalhar -->
@@ -47,7 +49,7 @@
                 push
                 dense
                 padding="5px 6px"
-                @click="openModalB"
+                @click="openModalB(props.row)"
                 label="B"
                 no-wrap
               />
@@ -57,7 +59,7 @@
       </q-table>
     </div>
   </template>
-  
+
   <script>
   export default {
     name: "TableEditarComponent",
@@ -95,7 +97,7 @@
         cols: this.columns,
       };
     },
-  
+
     methods: {
         getPaginationLabel(firstRowIndex, endRowIndex, totalRowNumber) {
             if (totalRowNumber == 1) {
@@ -107,16 +109,17 @@
         openModalA(){
             this.$emit('openModalA', true)
         },
-        openModalB(){
-            this.$emit('openModalB', true)
+        openModalB(row){
+            this.$emit('openModalB', {"open":true, "producao": row  })
         }
     },
   };
   </script>
-  
+
   <style scoped>
   .tableCss {
     height: 100%;
+    background-color: #e9d5ff
   }
   thead tr:first-child th {
     position: sticky;
@@ -124,6 +127,11 @@
     background: white;
     z-index: 1000;
   }
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th{
+    background-color: #2e1065;
+    font-weight: bold;
+  }
 
   </style>
-  
