@@ -15,6 +15,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
+    "cors": "^2.8.5",
     "keycloak": "^1.2.0",
     "keycloak-js": "^21.1.2",
     "quasar": "^2.12.2",
